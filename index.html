@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Flete - El Forastero</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Calculadora de Flete</h1>
+        <p class="subtitle">El Forastero S.A.</p>
+    </header>
+
+    <main>
+        <!-- Paso 1: Zona y Lista -->
+        <section class="config-section">
+            <div class="config-row">
+                <div class="field">
+                    <label for="zona">Zona de entrega</label>
+                    <select id="zona">
+                        <option value="">Seleccionar zona...</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label for="lista">Lista</label>
+                    <select id="lista" disabled>
+                        <option value="">Seleccionar lista...</option>
+                    </select>
+                </div>
+            </div>
+            <div id="tarifa-info" class="tarifa-info hidden"></div>
+        </section>
+
+        <!-- Buscador de productos -->
+        <section class="search-section">
+            <div class="field">
+                <label for="buscar">Buscar producto</label>
+                <input type="text" id="buscar" placeholder="Escribir nombre o código..." autocomplete="off" disabled>
+            </div>
+            <div class="field">
+                <label for="filtro-rubro">Filtrar por rubro</label>
+                <select id="filtro-rubro" disabled>
+                    <option value="">Todos los rubros</option>
+                </select>
+            </div>
+            <div id="resultados" class="resultados hidden"></div>
+        </section>
+
+        <!-- Pedido -->
+        <section class="pedido-section">
+            <h2>Pedido</h2>
+            <div id="pedido-vacio" class="pedido-vacio">
+                Seleccioná zona/lista y agregá productos para calcular el flete.
+            </div>
+            <div id="pedido-tabla-wrap" class="hidden">
+                <table id="pedido-tabla">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>UM</th>
+                            <th>Cant.</th>
+                            <th>Peso (kg)</th>
+                            <th>Subtotal</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="pedido-body"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Resumen / Flete -->
+        <section id="resumen" class="resumen-section hidden">
+            <div class="resumen-row">
+                <span>Subtotal (con IVA)</span>
+                <span id="res-subtotal">$0</span>
+            </div>
+            <div class="resumen-row">
+                <span>Peso total</span>
+                <span id="res-peso">0 kg</span>
+            </div>
+            <div class="resumen-row resumen-flete">
+                <span>Flete estimado</span>
+                <span id="res-flete">$0</span>
+            </div>
+            <div class="resumen-row resumen-total">
+                <span>Total con flete</span>
+                <span id="res-total">$0</span>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>Los valores son estimativos y pueden variar. Precios con IVA incluido.</p>
+    </footer>
+
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

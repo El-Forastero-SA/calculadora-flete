@@ -12412,7 +12412,7 @@ const TARIFAS = {
   "Bariloche": {
     "tipo": "peso",
     "listas": {
-      "A": 75.0,
+      "A": 80.0,
       "B": 230.0
     }
   },

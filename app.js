@@ -3,26 +3,40 @@
 const state = {
     zona: null,
     lista: null,
-    pedido: [], // { producto, um: 'unidad'|'pack', cantidad }
+    pedido: [],
 };
 
-// Formateo de moneda ARS
+const RUBRO_GROUPS = {
+    'Mascotas - Perros': r => r.startsWith('PERROS'),
+    'Mascotas - Gatos': r => r.startsWith('GATOS'),
+    'Mascotas - Otros': r => ['ABSORBENTES SANITARIOS', 'COCOONING ABSORBENTES', 'EQUINOS - FORTALEZA', 'PURINA BONELO GATOS', 'PURINA BONZO', 'PURINA CAT CHOW', 'PURINA DOGUI', 'PURINA EXCELLENT GATOS', 'PURINA EXCELLENT PERROS', 'PURINA FELIX MEGAMIX', 'PURINA GATI', 'PURINA PIEDRAS SANITARIAS', 'PURINA PRO PLAN GATOS', 'PURINA PRO PLAN PERROS', 'PURINA PRO PLAN VETERINARY GATOS', 'PURINA WET PRO PLAN PERROS'].includes(r),
+    'Alimentos': r => ['CABRALES CAFE', 'CABRALES CAPSULAS', 'CABRALES EDULCORANTES', 'CABRALES FILTROS', 'CABRALES PASTAS BARILLA', 'CABRALES TE Y MATE COCIDO', 'DON BERNABEU PASTAS', 'EDULCORANTES', 'HEALTHYVEG LEGUMBRES', 'LA MOROCHA LEGUMBRES', 'LA MOROCHA PASTAS', 'MARUCHAN', 'MERLIN FOODS', 'MOLINOS ACEITES ESPECIALES', 'MOLINOS ACEITES TRADICIONALES', 'MOLINOS ARROZ', 'MOLINOS GELIFICABLES', 'MOLINOS HARINAS', 'MOLINOS HORNEABLES', 'MOLINOS MINERVA', 'MOLINOS PASTAS DON FELIPE', 'MOLINOS PASTAS DON VICENTE', 'MOLINOS PASTAS FAVORITA', 'MOLINOS PASTAS LUCCHETTI', 'MOLINOS PASTAS MATARAZZO', 'MOLINOS PASTAS RELLENAS LUCCHETTI', 'MOLINOS PASTAS TERRABUSI', 'MOLINOS PREMEZCLAS', 'MOLINOS REBOZADORES', 'MOLINOS SEMOLA', 'MOLINOS SOLUBLES', 'MOLINOS TE Y MATE COCIDO', 'MUSTAD', 'PASTASOLE PASTAS', 'DR SCHAR'].includes(r),
+    'Bebidas': r => r.startsWith('MH ') || r.startsWith('BLEST') || r.startsWith('FINCA') || r.startsWith('STRAUS') || r === 'GRANGER',
+    'Yerbas y Mates': r => ['CAMPECHE YERBAS', 'MOLINOS YERBAS', 'ROSAMONTE ACCESORIOS', 'ROSAMONTE TE Y MATE COCIDO', 'ROSAMONTE YERBAS', 'VERDEFLOR YERBA', 'MOLINOS NIETO SENETINER', 'MOLINOS NIETO SENETINER ESPUMANTES'].includes(r),
+    'Papelera e Higiene': r => r.startsWith('PAPELERA'),
+};
+
+function getRubroGroup(rubro) {
+    for (const [group, test] of Object.entries(RUBRO_GROUPS)) {
+        if (test(rubro)) return group;
+    }
+    return 'Otros';
+}
+
 function formatMoney(n) {
-    return '$' + n.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    return '$' + n.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
 }
 
 function formatKg(n) {
-    return n.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' kg';
+    return n.toLocaleString('es-AR', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' kg';
 }
 
-// --- INIT ---
 function init() {
     const zonaSelect = document.getElementById('zona');
     const listaSelect = document.getElementById('lista');
     const buscarInput = document.getElementById('buscar');
     const filtroRubro = document.getElementById('filtro-rubro');
 
-    // Poblar zonas
     Object.keys(TARIFAS).forEach(zona => {
         const opt = document.createElement('option');
         opt.value = zona;
@@ -30,22 +44,33 @@ function init() {
         zonaSelect.appendChild(opt);
     });
 
-    // Poblar rubros
+    const groupedRubros = {};
     RUBROS.forEach(r => {
-        const opt = document.createElement('option');
-        opt.value = r;
-        opt.textContent = r;
-        filtroRubro.appendChild(opt);
+        const group = getRubroGroup(r);
+        if (!groupedRubros[group]) groupedRubros[group] = [];
+        groupedRubros[group].push(r);
     });
 
-    // Eventos
+    const groupOrder = ['Mascotas - Perros', 'Mascotas - Gatos', 'Mascotas - Otros', 'Alimentos', 'Bebidas', 'Yerbas y Mates', 'Papelera e Higiene', 'Otros'];
+    groupOrder.forEach(group => {
+        if (!groupedRubros[group] || groupedRubros[group].length === 0) return;
+        const optgroup = document.createElement('optgroup');
+        optgroup.label = group;
+        groupedRubros[group].forEach(r => {
+            const opt = document.createElement('option');
+            opt.value = r;
+            opt.textContent = r;
+            optgroup.appendChild(opt);
+        });
+        filtroRubro.appendChild(optgroup);
+    });
+
     zonaSelect.addEventListener('change', onZonaChange);
     listaSelect.addEventListener('change', onListaChange);
     buscarInput.addEventListener('input', onBuscar);
     buscarInput.addEventListener('focus', onBuscar);
     filtroRubro.addEventListener('change', onBuscar);
 
-    // Cerrar resultados al hacer click fuera
     document.addEventListener('click', (e) => {
         const resultados = document.getElementById('resultados');
         const searchSection = document.querySelector('.search-section');
@@ -64,7 +89,6 @@ function onZonaChange() {
     state.zona = zona || null;
     state.lista = null;
 
-    // Limpiar y poblar listas
     listaSelect.innerHTML = '<option value="">Seleccionar lista...</option>';
 
     if (zona && TARIFAS[zona]) {
@@ -117,14 +141,13 @@ function updateTarifaInfo() {
 
     if (tarifa.tipo === 'peso') {
         const conIva = valor * 1.21;
-        el.innerHTML = `<strong>${state.zona} - Lista ${state.lista}:</strong> ${formatMoney(valor)}/kg + IVA = <strong>${formatMoney(conIva)}/kg</strong>`;
+        el.innerHTML = '<strong>' + state.zona + ' — Lista ' + state.lista + ':</strong> ' + formatMoney(valor) + '/kg + IVA = <strong>' + formatMoney(conIva) + '/kg</strong>';
     } else {
-        el.innerHTML = `<strong>${state.zona} - Lista ${state.lista}:</strong> ${(valor * 100).toFixed(0)}% sobre el total del pedido`;
+        el.innerHTML = '<strong>' + state.zona + ' — Lista ' + state.lista + ':</strong> ' + (valor * 100).toFixed(0) + '% sobre el total del pedido';
     }
     el.classList.remove('hidden');
 }
 
-// --- BUSQUEDA ---
 function onBuscar() {
     const query = document.getElementById('buscar').value.trim().toLowerCase();
     const rubro = document.getElementById('filtro-rubro').value;
@@ -149,23 +172,22 @@ function onBuscar() {
         });
     }
 
-    // Limitar a 50 resultados
     filtered = filtered.slice(0, 50);
 
     if (filtered.length === 0) {
-        resultados.innerHTML = '<div class="resultado-item"><span class="resultado-nombre">Sin resultados</span></div>';
+        resultados.innerHTML = '<div class="resultado-item"><span class="resultado-nombre" style="color: var(--gris-texto);">Sin resultados</span></div>';
         resultados.classList.remove('hidden');
         return;
     }
 
     resultados.innerHTML = filtered.map(p =>
-        `<div class="resultado-item" data-codigo="${p.codigo}">
-            <div>
-                <div class="resultado-nombre">${highlightMatch(p.descripcion, query)}</div>
-                <div class="resultado-rubro">${p.rubro}</div>
-            </div>
-            <div class="resultado-precio">${formatMoney(p.precio_unit_iva)}</div>
-        </div>`
+        '<div class="resultado-item" data-codigo="' + p.codigo + '">' +
+            '<div>' +
+                '<div class="resultado-nombre">' + highlightMatch(p.descripcion, query) + '</div>' +
+                '<div class="resultado-rubro">' + p.rubro + '</div>' +
+            '</div>' +
+            '<div class="resultado-precio">' + formatMoney(p.precio_unit_iva) + '</div>' +
+        '</div>'
     ).join('');
 
     resultados.querySelectorAll('.resultado-item').forEach(el => {
@@ -192,7 +214,6 @@ function highlightMatch(text, query) {
     return result;
 }
 
-// --- MODAL ---
 function openModal(producto) {
     document.getElementById('resultados').classList.add('hidden');
     document.getElementById('buscar').value = '';
@@ -211,32 +232,31 @@ function openModal(producto) {
             ? producto.peso_unit_kg * producto.pack_qty * cantidad
             : producto.peso_unit_kg * cantidad;
 
-        overlay.innerHTML = `
-            <div class="modal">
-                <h3>${producto.descripcion}</h3>
-                <div class="modal-rubro">${producto.rubro} | Cod: ${producto.codigo}</div>
-                ${hasPack ? `
-                <div class="um-toggle">
-                    <button class="${um === 'unidad' ? 'active' : ''}" data-um="unidad">Unidad</button>
-                    <button class="${um === 'pack' ? 'active' : ''}" data-um="pack">${producto.um_pred}</button>
-                </div>` : ''}
-                <div class="precio-display">
-                    ${umLabel}: <strong>${formatMoney(precio)}</strong>
-                    <br><small>Peso: ${formatKg(pesoLinea)} | Total: ${formatMoney(precio * cantidad)}</small>
-                </div>
-                <div class="cant-row">
-                    <button class="btn-menos">&minus;</button>
-                    <input type="number" class="cant-input" value="${cantidad}" min="1">
-                    <button class="btn-mas">&plus;</button>
-                </div>
-                <div class="modal-actions">
-                    <button class="btn btn-secondary btn-cancelar">Cancelar</button>
-                    <button class="btn btn-primary btn-agregar">Agregar</button>
-                </div>
-            </div>
-        `;
+        overlay.innerHTML =
+            '<div class="modal">' +
+                '<h3>' + producto.descripcion + '</h3>' +
+                '<div class="modal-rubro">' + producto.rubro + ' &middot; Cod: ' + producto.codigo + '</div>' +
+                (hasPack ?
+                '<div class="um-toggle">' +
+                    '<button class="' + (um === 'unidad' ? 'active' : '') + '" data-um="unidad">Unidad</button>' +
+                    '<button class="' + (um === 'pack' ? 'active' : '') + '" data-um="pack">' + producto.um_pred + '</button>' +
+                '</div>' : '') +
+                '<div class="precio-display">' +
+                    '<div class="precio-label">' + umLabel + '</div>' +
+                    '<strong>' + formatMoney(precio) + '</strong>' +
+                    '<small>Peso: ' + formatKg(pesoLinea) + ' &middot; Total: ' + formatMoney(precio * cantidad) + '</small>' +
+                '</div>' +
+                '<div class="cant-row">' +
+                    '<button class="btn-menos">&minus;</button>' +
+                    '<input type="number" class="cant-input" value="' + cantidad + '" min="1">' +
+                    '<button class="btn-mas">&plus;</button>' +
+                '</div>' +
+                '<div class="modal-actions">' +
+                    '<button class="btn btn-secondary btn-cancelar">Cancelar</button>' +
+                    '<button class="btn btn-primary btn-agregar">Agregar al pedido</button>' +
+                '</div>' +
+            '</div>';
 
-        // Eventos del modal
         overlay.querySelector('.btn-cancelar')?.addEventListener('click', () => overlay.remove());
         overlay.querySelector('.btn-agregar')?.addEventListener('click', () => {
             agregarAlPedido(producto, um, cantidad);
@@ -261,7 +281,6 @@ function openModal(producto) {
             });
         });
 
-        // Click en overlay cierra
         overlay.addEventListener('click', (e) => {
             if (e.target === overlay) overlay.remove();
         });
@@ -270,16 +289,13 @@ function openModal(producto) {
     render();
     document.body.appendChild(overlay);
 
-    // Focus en cantidad
     setTimeout(() => {
         const inp = overlay.querySelector('.cant-input');
         if (inp) inp.select();
     }, 100);
 }
 
-// --- PEDIDO ---
 function agregarAlPedido(producto, um, cantidad) {
-    // Si ya existe el mismo producto con la misma UM, sumar cantidad
     const existing = state.pedido.find(
         item => item.producto.codigo === producto.codigo && item.um === um
     );
@@ -323,14 +339,14 @@ function renderPedido() {
         const subtotal = precio * item.cantidad;
         const umLabel = item.um === 'pack' ? p.um_pred : 'Unid.';
 
-        return `<tr>
-            <td class="col-producto"><span class="prod-nombre">${p.descripcion}</span></td>
-            <td>${umLabel}</td>
-            <td>${item.cantidad}</td>
-            <td>${formatKg(pesoLinea)}</td>
-            <td>${formatMoney(subtotal)}</td>
-            <td><button class="btn-eliminar" data-index="${i}" title="Eliminar">&times;</button></td>
-        </tr>`;
+        return '<tr>' +
+            '<td class="col-producto"><span class="prod-nombre">' + p.descripcion + '</span></td>' +
+            '<td>' + umLabel + '</td>' +
+            '<td class="col-num">' + item.cantidad + '</td>' +
+            '<td class="col-num">' + formatKg(pesoLinea) + '</td>' +
+            '<td class="col-num">' + formatMoney(subtotal) + '</td>' +
+            '<td><button class="btn-eliminar" data-index="' + i + '" title="Eliminar">&times;</button></td>' +
+        '</tr>';
     }).join('');
 
     tbody.querySelectorAll('.btn-eliminar').forEach(btn => {
@@ -382,5 +398,4 @@ function recalcular() {
     document.getElementById('res-total').textContent = formatMoney(total);
 }
 
-// --- START ---
 document.addEventListener('DOMContentLoaded', init);

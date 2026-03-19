@@ -5,28 +5,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculadora de Flete - El Forastero</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <header>
-        <h1>Calculadora de Flete</h1>
-        <p class="subtitle">El Forastero S.A.</p>
+        <div class="header-inner">
+            <img src="forastero_logo.png" alt="El Forastero S.A." class="header-logo">
+            <div class="header-text">
+                <h1>Calculadora de Flete</h1>
+                <p class="subtitle">Estimá el costo de envío de tu pedido</p>
+            </div>
+        </div>
+        <div class="header-accent"></div>
     </header>
 
     <main>
         <!-- Paso 1: Zona y Lista -->
         <section class="config-section">
+            <div class="section-label">
+                <span class="step-badge">1</span>
+                <span>Configuración de envío</span>
+            </div>
             <div class="config-row">
                 <div class="field">
                     <label for="zona">Zona de entrega</label>
-                    <select id="zona">
-                        <option value="">Seleccionar zona...</option>
-                    </select>
+                    <div class="select-wrap">
+                        <select id="zona">
+                            <option value="">Seleccionar zona...</option>
+                        </select>
+                        <svg class="select-arrow" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+                    </div>
                 </div>
                 <div class="field">
-                    <label for="lista">Lista</label>
-                    <select id="lista" disabled>
-                        <option value="">Seleccionar lista...</option>
-                    </select>
+                    <label for="lista">Lista de precios</label>
+                    <div class="select-wrap">
+                        <select id="lista" disabled>
+                            <option value="">Seleccionar lista...</option>
+                        </select>
+                        <svg class="select-arrow" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+                    </div>
                 </div>
             </div>
             <div id="tarifa-info" class="tarifa-info hidden"></div>
@@ -34,24 +53,40 @@
 
         <!-- Buscador de productos -->
         <section class="search-section">
-            <div class="field">
-                <label for="buscar">Buscar producto</label>
-                <input type="text" id="buscar" placeholder="Escribir nombre o código..." autocomplete="off" disabled>
+            <div class="section-label">
+                <span class="step-badge">2</span>
+                <span>Agregar productos</span>
             </div>
-            <div class="field">
-                <label for="filtro-rubro">Filtrar por rubro</label>
-                <select id="filtro-rubro" disabled>
-                    <option value="">Todos los rubros</option>
-                </select>
+            <div class="search-row">
+                <div class="field field-search">
+                    <label for="buscar">Buscar producto</label>
+                    <div class="input-wrap">
+                        <svg class="input-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"/></svg>
+                        <input type="text" id="buscar" placeholder="Nombre, código o marca..." autocomplete="off" disabled>
+                    </div>
+                </div>
+                <div class="field field-rubro">
+                    <label for="filtro-rubro">Filtrar por rubro</label>
+                    <div class="select-wrap">
+                        <select id="filtro-rubro" disabled>
+                            <option value="">Todos los rubros</option>
+                        </select>
+                        <svg class="select-arrow" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+                    </div>
+                </div>
             </div>
             <div id="resultados" class="resultados hidden"></div>
         </section>
 
         <!-- Pedido -->
         <section class="pedido-section">
-            <h2>Pedido</h2>
+            <div class="section-label">
+                <span class="step-badge">3</span>
+                <span>Tu pedido</span>
+            </div>
             <div id="pedido-vacio" class="pedido-vacio">
-                Seleccioná zona/lista y agregá productos para calcular el flete.
+                <svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"/></svg>
+                <p>Seleccioná zona y lista, después buscá productos para armar tu pedido.</p>
             </div>
             <div id="pedido-tabla-wrap" class="hidden">
                 <table id="pedido-tabla">
@@ -59,10 +94,10 @@
                         <tr>
                             <th>Producto</th>
                             <th>UM</th>
-                            <th>Cant.</th>
-                            <th>Peso (kg)</th>
-                            <th>Subtotal</th>
-                            <th></th>
+                            <th class="col-num">Cant.</th>
+                            <th class="col-num">Peso</th>
+                            <th class="col-num">Subtotal</th>
+                            <th class="col-action"></th>
                         </tr>
                     </thead>
                     <tbody id="pedido-body"></tbody>
@@ -81,7 +116,10 @@
                 <span id="res-peso">0 kg</span>
             </div>
             <div class="resumen-row resumen-flete">
-                <span>Flete estimado</span>
+                <span>
+                    <svg class="inline-icon" viewBox="0 0 20 20" fill="currentColor"><path d="M8.5 3.5a4.5 4.5 0 00-4.5 4.5c0 3.5 4.5 8.5 4.5 8.5s4.5-5 4.5-8.5a4.5 4.5 0 00-4.5-4.5zm0 6a1.5 1.5 0 110-3 1.5 1.5 0 010 3z"/></svg>
+                    Flete estimado
+                </span>
                 <span id="res-flete">$0</span>
             </div>
             <div class="resumen-row resumen-total">
@@ -93,6 +131,7 @@
 
     <footer>
         <p>Los valores son estimativos y pueden variar. Precios con IVA incluido.</p>
+        <p class="footer-brand">El Forastero S.A. &middot; Desde 1959</p>
     </footer>
 
     <script src="data.js"></script>

@@ -75,8 +75,12 @@ function init() {
     });
 }
 
+function normalize(str) {
+    return str.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+}
+
 function onLocalidadInput() {
-    const query = document.getElementById('localidad-input').value.trim().toLowerCase();
+    const query = normalize(document.getElementById('localidad-input').value.trim());
     const resultados = document.getElementById('localidad-resultados');
 
     // Si el usuario borró el campo, resetear estado
@@ -95,7 +99,7 @@ function onLocalidadInput() {
 
     const terms = query.split(/\s+/);
     const filtered = LOCALIDADES.filter(loc => {
-        const text = (loc.nombre + ' ' + loc.provincia + ' ' + loc.cp).toLowerCase();
+        const text = normalize(loc.nombre + ' ' + loc.provincia + ' ' + loc.cp);
         return terms.every(t => text.includes(t));
     }).slice(0, 20);
 

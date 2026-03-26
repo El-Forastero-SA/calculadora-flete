@@ -288,6 +288,16 @@ select:disabled, input:disabled {
     white-space: nowrap;
 }
 
+.localidad-lista-badge {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--gris-texto);
+    background: #f3f4f6;
+    border-radius: 4px;
+    padding: 0.2rem 0.5rem;
+    white-space: nowrap;
+}
+
 .modal-overlay {
     position: fixed;
     top: 0;

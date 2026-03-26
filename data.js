@@ -12408,28 +12408,624 @@ const RUBROS = [
   "VERDEFLOR YERBA"
 ];
 
+const LOCALIDADES = [
+  {
+    "nombre": "Bariloche",
+    "cp": "8400",
+    "provincia": "Río Negro",
+    "lista": "Bari A"
+  },
+  {
+    "nombre": "Dina Huapi",
+    "cp": "8402",
+    "provincia": "Río Negro",
+    "lista": "Bari A"
+  },
+  {
+    "nombre": "El Maitén",
+    "cp": "9210",
+    "provincia": "Chubut",
+    "lista": "Bari B"
+  },
+  {
+    "nombre": "Esquel",
+    "cp": "9200",
+    "provincia": "Chubut",
+    "lista": "Bari B"
+  },
+  {
+    "nombre": "El Hoyo",
+    "cp": "8431",
+    "provincia": "Chubut",
+    "lista": "Bari B"
+  },
+  {
+    "nombre": "Lago Puelo",
+    "cp": "9211",
+    "provincia": "Chubut",
+    "lista": "Bari B"
+  },
+  {
+    "nombre": "Epuyén",
+    "cp": "9211",
+    "provincia": "Chubut",
+    "lista": "Bari B"
+  },
+  {
+    "nombre": "Trevelin",
+    "cp": "9203",
+    "provincia": "Chubut",
+    "lista": "Bari B"
+  },
+  {
+    "nombre": "San Martín de los Andes",
+    "cp": "8370",
+    "provincia": "Neuquén",
+    "lista": "Bari B"
+  },
+  {
+    "nombre": "Junín de los Andes",
+    "cp": "8371",
+    "provincia": "Neuquén",
+    "lista": "Bari B"
+  },
+  {
+    "nombre": "Villa La Angostura",
+    "cp": "8407",
+    "provincia": "Neuquén",
+    "lista": "Bari B"
+  },
+  {
+    "nombre": "Villa Traful",
+    "cp": "8403",
+    "provincia": "Neuquén",
+    "lista": "Bari B"
+  },
+  {
+    "nombre": "El Bolsón",
+    "cp": "8430",
+    "provincia": "Río Negro",
+    "lista": "Bari B"
+  },
+  {
+    "nombre": "El Foyel",
+    "cp": "8401",
+    "provincia": "Río Negro",
+    "lista": "Bari B"
+  },
+  {
+    "nombre": "El Manso",
+    "cp": "8430",
+    "provincia": "Río Negro",
+    "lista": "Bari B"
+  },
+  {
+    "nombre": "Villa Llanquín",
+    "cp": "8401",
+    "provincia": "Río Negro",
+    "lista": "Bari B"
+  },
+  {
+    "nombre": "Villa Mascardi",
+    "cp": "8401",
+    "provincia": "Río Negro",
+    "lista": "Bari B"
+  },
+  {
+    "nombre": "Neuquén",
+    "cp": "8300",
+    "provincia": "Neuquén",
+    "lista": "Cerv A"
+  },
+  {
+    "nombre": "Plottier",
+    "cp": "8316",
+    "provincia": "Neuquén",
+    "lista": "Cerv A"
+  },
+  {
+    "nombre": "Cutral Có",
+    "cp": "8322",
+    "provincia": "Neuquén",
+    "lista": "Cerv A"
+  },
+  {
+    "nombre": "Centenario",
+    "cp": "8309",
+    "provincia": "Neuquén",
+    "lista": "Cerv A"
+  },
+  {
+    "nombre": "Plaza Huincul",
+    "cp": "8318",
+    "provincia": "Neuquén",
+    "lista": "Cerv A"
+  },
+  {
+    "nombre": "Senillosa",
+    "cp": "8320",
+    "provincia": "Neuquén",
+    "lista": "Cerv A"
+  },
+  {
+    "nombre": "San Patricio del Chañar",
+    "cp": "8305",
+    "provincia": "Neuquén",
+    "lista": "Cerv A"
+  },
+  {
+    "nombre": "Vista Alegre Norte",
+    "cp": "8309",
+    "provincia": "Neuquén",
+    "lista": "Cerv A"
+  },
+  {
+    "nombre": "Cipolletti",
+    "cp": "8324",
+    "provincia": "Río Negro",
+    "lista": "Cerv A"
+  },
+  {
+    "nombre": "General Roca",
+    "cp": "8332",
+    "provincia": "Río Negro",
+    "lista": "Cerv A"
+  },
+  {
+    "nombre": "Allen",
+    "cp": "8328",
+    "provincia": "Río Negro",
+    "lista": "Cerv A"
+  },
+  {
+    "nombre": "Cinco Saltos",
+    "cp": "8303",
+    "provincia": "Río Negro",
+    "lista": "Cerv A"
+  },
+  {
+    "nombre": "Villa Regina",
+    "cp": "8336",
+    "provincia": "Río Negro",
+    "lista": "Cerv A"
+  },
+  {
+    "nombre": "Ingeniero Huergo",
+    "cp": "8334",
+    "provincia": "Río Negro",
+    "lista": "Cerv A"
+  },
+  {
+    "nombre": "Cervantes",
+    "cp": "8326",
+    "provincia": "Río Negro",
+    "lista": "Cerv A"
+  },
+  {
+    "nombre": "Chichinales",
+    "cp": "8326",
+    "provincia": "Río Negro",
+    "lista": "Cerv A"
+  },
+  {
+    "nombre": "Barda del Medio",
+    "cp": "8305",
+    "provincia": "Río Negro",
+    "lista": "Cerv A"
+  },
+  {
+    "nombre": "Fernández Oro",
+    "cp": "8325",
+    "provincia": "Río Negro",
+    "lista": "Cerv A"
+  },
+  {
+    "nombre": "Mainqué",
+    "cp": "8326",
+    "provincia": "Río Negro",
+    "lista": "Cerv A"
+  },
+  {
+    "nombre": "Campo Grande - San Isidro",
+    "cp": "8305",
+    "provincia": "Río Negro",
+    "lista": "Cerv A"
+  },
+  {
+    "nombre": "Sargento Vidal",
+    "cp": "8305",
+    "provincia": "Río Negro",
+    "lista": "Cerv A"
+  },
+  {
+    "nombre": "Campo Grande - Villa Manzano",
+    "cp": "8308",
+    "provincia": "Río Negro",
+    "lista": "Cerv A"
+  },
+  {
+    "nombre": "General E. Godoy",
+    "cp": "8336",
+    "provincia": "Río Negro",
+    "lista": "Cerv A"
+  },
+  {
+    "nombre": "Villa Manzano",
+    "cp": "8308",
+    "provincia": "Río Negro",
+    "lista": "Cerv A"
+  },
+  {
+    "nombre": "Comandante Cordero",
+    "cp": "8301",
+    "provincia": "Río Negro",
+    "lista": "Cerv A"
+  },
+  {
+    "nombre": "Valle Azul",
+    "cp": "8336",
+    "provincia": "Río Negro",
+    "lista": "Cerv A"
+  },
+  {
+    "nombre": "Arroyito",
+    "cp": "8313",
+    "provincia": "Neuquén",
+    "lista": "Cerv B"
+  },
+  {
+    "nombre": "Piedra del Águila",
+    "cp": "8315",
+    "provincia": "Neuquén",
+    "lista": "Cerv B"
+  },
+  {
+    "nombre": "Zapala",
+    "cp": "8340",
+    "provincia": "Neuquén",
+    "lista": "Cerv B"
+  },
+  {
+    "nombre": "Las Lajas",
+    "cp": "8347",
+    "provincia": "Neuquén",
+    "lista": "Cerv B"
+  },
+  {
+    "nombre": "Picún Leufú",
+    "cp": "8313",
+    "provincia": "Neuquén",
+    "lista": "Cerv B"
+  },
+  {
+    "nombre": "Villa El Chocón",
+    "cp": "8311",
+    "provincia": "Neuquén",
+    "lista": "Cerv B"
+  },
+  {
+    "nombre": "Añelo",
+    "cp": "8305",
+    "provincia": "Neuquén",
+    "lista": "Cerv B"
+  },
+  {
+    "nombre": "Choele Choel",
+    "cp": "8360",
+    "provincia": "Río Negro",
+    "lista": "Cerv B"
+  },
+  {
+    "nombre": "Chimpay",
+    "cp": "8364",
+    "provincia": "Río Negro",
+    "lista": "Cerv B"
+  },
+  {
+    "nombre": "Catriel",
+    "cp": "8307",
+    "provincia": "Río Negro",
+    "lista": "Cerv B"
+  },
+  {
+    "nombre": "Luis Beltrán",
+    "cp": "8361",
+    "provincia": "Río Negro",
+    "lista": "Cerv B"
+  },
+  {
+    "nombre": "Coronel Belisle",
+    "cp": "8364",
+    "provincia": "Río Negro",
+    "lista": "Cerv B"
+  },
+  {
+    "nombre": "Lamarque",
+    "cp": "8363",
+    "provincia": "Río Negro",
+    "lista": "Cerv B"
+  },
+  {
+    "nombre": "Chelforo",
+    "cp": "8366",
+    "provincia": "Río Negro",
+    "lista": "Cerv B"
+  },
+  {
+    "nombre": "Darwin",
+    "cp": "8364",
+    "provincia": "Río Negro",
+    "lista": "Cerv B"
+  },
+  {
+    "nombre": "Pomona",
+    "cp": "8363",
+    "provincia": "Río Negro",
+    "lista": "Cerv B"
+  },
+  {
+    "nombre": "25 de Mayo",
+    "cp": "8201",
+    "provincia": "La Pampa",
+    "lista": "Cerv B"
+  },
+  {
+    "nombre": "Chos Malal",
+    "cp": "8353",
+    "provincia": "Neuquén",
+    "lista": "Cerv B"
+  },
+  {
+    "nombre": "Andacollo",
+    "cp": "8353",
+    "provincia": "Neuquén",
+    "lista": "Cerv B"
+  },
+  {
+    "nombre": "Loncopué",
+    "cp": "8349",
+    "provincia": "Neuquén",
+    "lista": "Cerv B"
+  },
+  {
+    "nombre": "Copahue",
+    "cp": "8349",
+    "provincia": "Neuquén",
+    "lista": "Cerv B"
+  },
+  {
+    "nombre": "Buta Ranquil",
+    "cp": "8353",
+    "provincia": "Neuquén",
+    "lista": "Cerv B"
+  },
+  {
+    "nombre": "Las Ovejas",
+    "cp": "8353",
+    "provincia": "Neuquén",
+    "lista": "Cerv B"
+  },
+  {
+    "nombre": "Bajada del Agrio",
+    "cp": "8353",
+    "provincia": "Neuquén",
+    "lista": "Cerv B"
+  },
+  {
+    "nombre": "Rincón de los Sauces",
+    "cp": "8319",
+    "provincia": "Neuquén",
+    "lista": "Cerv C"
+  },
+  {
+    "nombre": "Aluminé",
+    "cp": "8345",
+    "provincia": "Neuquén",
+    "lista": "Cerv C"
+  },
+  {
+    "nombre": "Villa Pehuenia",
+    "cp": "8345",
+    "provincia": "Neuquén",
+    "lista": "Cerv C"
+  },
+  {
+    "nombre": "Santa Rosa",
+    "cp": "6300",
+    "provincia": "La Pampa",
+    "lista": "Santa Rosa A"
+  },
+  {
+    "nombre": "Toay",
+    "cp": "6303",
+    "provincia": "La Pampa",
+    "lista": "Santa Rosa A"
+  },
+  {
+    "nombre": "General Pico",
+    "cp": "6360",
+    "provincia": "La Pampa",
+    "lista": "Santa Rosa B"
+  },
+  {
+    "nombre": "General Acha",
+    "cp": "8200",
+    "provincia": "La Pampa",
+    "lista": "Santa Rosa C"
+  },
+  {
+    "nombre": "Eduardo Castex",
+    "cp": "6380",
+    "provincia": "La Pampa",
+    "lista": "Santa Rosa C"
+  },
+  {
+    "nombre": "Macachín",
+    "cp": "6307",
+    "provincia": "La Pampa",
+    "lista": "Santa Rosa C"
+  },
+  {
+    "nombre": "Realicó",
+    "cp": "6200",
+    "provincia": "La Pampa",
+    "lista": "Santa Rosa C"
+  },
+  {
+    "nombre": "Miguel Riglos",
+    "cp": "6301",
+    "provincia": "La Pampa",
+    "lista": "Santa Rosa C"
+  },
+  {
+    "nombre": "Bernardo Larroudé",
+    "cp": "6220",
+    "provincia": "La Pampa",
+    "lista": "Santa Rosa C"
+  },
+  {
+    "nombre": "Ingeniero Luiggi",
+    "cp": "6205",
+    "provincia": "La Pampa",
+    "lista": "Santa Rosa C"
+  },
+  {
+    "nombre": "Alta Italia",
+    "cp": "6207",
+    "provincia": "La Pampa",
+    "lista": "Santa Rosa C"
+  },
+  {
+    "nombre": "Colonia Barón",
+    "cp": "6315",
+    "provincia": "La Pampa",
+    "lista": "Santa Rosa C"
+  },
+  {
+    "nombre": "Jacinto Aráuz",
+    "cp": "8208",
+    "provincia": "La Pampa",
+    "lista": "Santa Rosa C"
+  },
+  {
+    "nombre": "Intendente Alvear",
+    "cp": "6221",
+    "provincia": "La Pampa",
+    "lista": "Santa Rosa C"
+  },
+  {
+    "nombre": "Quemú Quemú",
+    "cp": "6333",
+    "provincia": "La Pampa",
+    "lista": "Santa Rosa C"
+  },
+  {
+    "nombre": "Guatraché",
+    "cp": "6311",
+    "provincia": "La Pampa",
+    "lista": "Santa Rosa C"
+  },
+  {
+    "nombre": "Bernasconi",
+    "cp": "8204",
+    "provincia": "La Pampa",
+    "lista": "Santa Rosa C"
+  },
+  {
+    "nombre": "Parera",
+    "cp": "6213",
+    "provincia": "La Pampa",
+    "lista": "Santa Rosa C"
+  },
+  {
+    "nombre": "Catriló",
+    "cp": "6330",
+    "provincia": "La Pampa",
+    "lista": "Santa Rosa C"
+  },
+  {
+    "nombre": "Trenel",
+    "cp": "6369",
+    "provincia": "La Pampa",
+    "lista": "Santa Rosa C"
+  },
+  {
+    "nombre": "Santa Isabel",
+    "cp": "6323",
+    "provincia": "La Pampa",
+    "lista": "Santa Rosa C"
+  },
+  {
+    "nombre": "General San Martín",
+    "cp": "8206",
+    "provincia": "La Pampa",
+    "lista": "Santa Rosa C"
+  },
+  {
+    "nombre": "Caleufú",
+    "cp": "6387",
+    "provincia": "La Pampa",
+    "lista": "Santa Rosa C"
+  },
+  {
+    "nombre": "Alpachiri",
+    "cp": "6309",
+    "provincia": "La Pampa",
+    "lista": "Santa Rosa C"
+  },
+  {
+    "nombre": "Victorica",
+    "cp": "6319",
+    "provincia": "La Pampa",
+    "lista": "Santa Rosa C"
+  },
+  {
+    "nombre": "Rivera",
+    "cp": "6441",
+    "provincia": "La Pampa",
+    "lista": "Santa Rosa C"
+  }
+];
+
 const TARIFAS = {
-  "Bariloche": {
+  "Bari A": {
     "tipo": "peso",
-    "listas": {
-      "A": 80.0,
-      "B": 230.0
-    }
+    "valor": 75.0,
+    "zona": "Bariloche"
   },
-  "Cervantes": {
+  "Bari B": {
     "tipo": "peso",
-    "listas": {
-      "A": 75.0,
-      "B": 150.0,
-      "C": 275.0
-    }
+    "valor": 230.0,
+    "zona": "Bariloche"
   },
-  "Santa Rosa": {
+  "Cerv A": {
+    "tipo": "peso",
+    "valor": 75.0,
+    "zona": "Cervantes"
+  },
+  "Cerv B": {
+    "tipo": "peso",
+    "valor": 150.0,
+    "zona": "Cervantes"
+  },
+  "Cerv C": {
+    "tipo": "peso",
+    "valor": 275.0,
+    "zona": "Cervantes"
+  },
+  "Santa Rosa A": {
     "tipo": "porcentaje",
-    "listas": {
-      "A": 0.03,
-      "B": 0.05,
-      "C": 0.07
-    }
+    "valor": 0.03,
+    "zona": "Santa Rosa"
+  },
+  "Santa Rosa B": {
+    "tipo": "porcentaje",
+    "valor": 0.05,
+    "zona": "Santa Rosa"
+  },
+  "Santa Rosa C": {
+    "tipo": "porcentaje",
+    "valor": 0.07,
+    "zona": "Santa Rosa"
   }
 };

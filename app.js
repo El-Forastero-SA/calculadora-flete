@@ -1,8 +1,8 @@
 // Calculadora de Flete - El Forastero S.A.
 
 const state = {
-    zona: null,
-    lista: null,
+    lista: null,      // key de TARIFAS (ej: "Bari A")
+    localidad: null,  // nombre de la localidad seleccionada
     pedido: [],
 };
 
@@ -32,18 +32,11 @@ function formatKg(n) {
 }
 
 function init() {
-    const zonaSelect = document.getElementById('zona');
-    const listaSelect = document.getElementById('lista');
+    const localidadInput = document.getElementById('localidad-input');
     const buscarInput = document.getElementById('buscar');
     const filtroRubro = document.getElementById('filtro-rubro');
 
-    Object.keys(TARIFAS).forEach(zona => {
-        const opt = document.createElement('option');
-        opt.value = zona;
-        opt.textContent = zona;
-        zonaSelect.appendChild(opt);
-    });
-
+    // Construir filtro de rubros agrupado
     const groupedRubros = {};
     RUBROS.forEach(r => {
         const group = getRubroGroup(r);
@@ -65,65 +58,83 @@ function init() {
         filtroRubro.appendChild(optgroup);
     });
 
-    zonaSelect.addEventListener('change', onZonaChange);
-    listaSelect.addEventListener('change', onListaChange);
+    localidadInput.addEventListener('input', onLocalidadInput);
+    localidadInput.addEventListener('focus', onLocalidadInput);
     buscarInput.addEventListener('input', onBuscar);
     buscarInput.addEventListener('focus', onBuscar);
     filtroRubro.addEventListener('change', onBuscar);
 
     document.addEventListener('click', (e) => {
         const resultados = document.getElementById('resultados');
+        const localidadResultados = document.getElementById('localidad-resultados');
         const searchSection = document.querySelector('.search-section');
-        if (!searchSection.contains(e.target)) {
-            resultados.classList.add('hidden');
-        }
+        const configSection = document.querySelector('.config-section');
+
+        if (!searchSection.contains(e.target)) resultados.classList.add('hidden');
+        if (!configSection.contains(e.target)) localidadResultados.classList.add('hidden');
     });
 }
 
-function onZonaChange() {
-    const zona = document.getElementById('zona').value;
-    const listaSelect = document.getElementById('lista');
-    const buscarInput = document.getElementById('buscar');
-    const filtroRubro = document.getElementById('filtro-rubro');
+function onLocalidadInput() {
+    const query = document.getElementById('localidad-input').value.trim().toLowerCase();
+    const resultados = document.getElementById('localidad-resultados');
 
-    state.zona = zona || null;
-    state.lista = null;
-
-    listaSelect.innerHTML = '<option value="">Seleccionar lista...</option>';
-
-    if (zona && TARIFAS[zona]) {
-        Object.keys(TARIFAS[zona].listas).forEach(l => {
-            const opt = document.createElement('option');
-            opt.value = l;
-            opt.textContent = 'Lista ' + l;
-            listaSelect.appendChild(opt);
-        });
-        listaSelect.disabled = false;
-    } else {
-        listaSelect.disabled = true;
+    // Si el usuario borró el campo, resetear estado
+    if (!query) {
+        resultados.classList.add('hidden');
+        if (state.lista) {
+            state.lista = null;
+            state.localidad = null;
+            document.getElementById('buscar').disabled = true;
+            document.getElementById('filtro-rubro').disabled = true;
+            updateTarifaInfo();
+            recalcular();
+        }
+        return;
     }
 
-    buscarInput.disabled = true;
-    filtroRubro.disabled = true;
-    updateTarifaInfo();
-    recalcular();
+    const terms = query.split(/\s+/);
+    const filtered = LOCALIDADES.filter(loc => {
+        const text = (loc.nombre + ' ' + loc.provincia + ' ' + loc.cp).toLowerCase();
+        return terms.every(t => text.includes(t));
+    }).slice(0, 20);
+
+    if (filtered.length === 0) {
+        resultados.innerHTML = '<div class="resultado-item"><span class="resultado-nombre" style="color: var(--gris-texto);">Sin resultados para "' + query + '"</span></div>';
+        resultados.classList.remove('hidden');
+        return;
+    }
+
+    resultados.innerHTML = filtered.map(loc =>
+        '<div class="resultado-item localidad-item" data-lista="' + loc.lista + '" data-nombre="' + loc.nombre + '">' +
+            '<div>' +
+                '<div class="resultado-nombre">' + highlightMatch(loc.nombre, query) + '</div>' +
+                '<div class="resultado-rubro">' + loc.provincia + ' &middot; CP ' + loc.cp + '</div>' +
+            '</div>' +
+            '<div class="localidad-lista-badge">' + loc.lista + '</div>' +
+        '</div>'
+    ).join('');
+
+    resultados.querySelectorAll('.localidad-item').forEach(el => {
+        el.addEventListener('click', () => {
+            selectLocalidad(el.dataset.lista, el.dataset.nombre);
+        });
+    });
+
+    resultados.classList.remove('hidden');
 }
 
-function onListaChange() {
-    const lista = document.getElementById('lista').value;
+function selectLocalidad(lista, nombre) {
+    state.lista = lista;
+    state.localidad = nombre;
+
+    document.getElementById('localidad-input').value = nombre;
+    document.getElementById('localidad-resultados').classList.add('hidden');
+
     const buscarInput = document.getElementById('buscar');
     const filtroRubro = document.getElementById('filtro-rubro');
-
-    state.lista = lista || null;
-
-    if (lista) {
-        buscarInput.disabled = false;
-        filtroRubro.disabled = false;
-        buscarInput.focus();
-    } else {
-        buscarInput.disabled = true;
-        filtroRubro.disabled = true;
-    }
+    buscarInput.disabled = false;
+    filtroRubro.disabled = false;
 
     updateTarifaInfo();
     recalcular();
@@ -131,19 +142,18 @@ function onListaChange() {
 
 function updateTarifaInfo() {
     const el = document.getElementById('tarifa-info');
-    if (!state.zona || !state.lista) {
+    if (!state.lista || !TARIFAS[state.lista]) {
         el.classList.add('hidden');
         return;
     }
 
-    const tarifa = TARIFAS[state.zona];
-    const valor = tarifa.listas[state.lista];
+    const tarifa = TARIFAS[state.lista];
 
     if (tarifa.tipo === 'peso') {
-        const conIva = valor * 1.21;
-        el.innerHTML = '<strong>' + state.zona + ' — Lista ' + state.lista + ':</strong> ' + formatMoney(valor) + '/kg + IVA = <strong>' + formatMoney(conIva) + '/kg</strong>';
+        const conIva = tarifa.valor * 1.21;
+        el.innerHTML = '<strong>' + state.localidad + '</strong> &middot; Lista ' + state.lista + ': ' + formatMoney(tarifa.valor) + '/kg + IVA = <strong>' + formatMoney(conIva) + '/kg</strong>';
     } else {
-        el.innerHTML = '<strong>' + state.zona + ' — Lista ' + state.lista + ':</strong> ' + (valor * 100).toFixed(0) + '% sobre el total del pedido';
+        el.innerHTML = '<strong>' + state.localidad + '</strong> &middot; Lista ' + state.lista + ': <strong>' + (tarifa.valor * 100).toFixed(0) + '%</strong> sobre el total del pedido';
     }
     el.classList.remove('hidden');
 }
@@ -359,7 +369,7 @@ function renderPedido() {
 function recalcular() {
     const resumen = document.getElementById('resumen');
 
-    if (state.pedido.length === 0 || !state.zona || !state.lista) {
+    if (state.pedido.length === 0 || !state.lista) {
         resumen.classList.add('hidden');
         return;
     }
@@ -380,14 +390,13 @@ function recalcular() {
         pesoTotal += peso;
     });
 
-    const tarifa = TARIFAS[state.zona];
-    const valor = tarifa.listas[state.lista];
+    const tarifa = TARIFAS[state.lista];
     let flete = 0;
 
     if (tarifa.tipo === 'peso') {
-        flete = pesoTotal * valor * 1.21;
+        flete = pesoTotal * tarifa.valor * 1.21;
     } else {
-        flete = subtotal * valor;
+        flete = subtotal * tarifa.valor;
     }
 
     const total = subtotal + flete;

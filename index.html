@@ -22,31 +22,19 @@
     </header>
 
     <main>
-        <!-- Paso 1: Zona y Lista -->
+        <!-- Paso 1: Localidad -->
         <section class="config-section">
             <div class="section-label">
                 <span class="step-badge">1</span>
                 <span>Configuración de envío</span>
             </div>
-            <div class="config-row">
-                <div class="field">
-                    <label for="zona">Zona de entrega</label>
-                    <div class="select-wrap">
-                        <select id="zona">
-                            <option value="">Seleccionar zona...</option>
-                        </select>
-                        <svg class="select-arrow" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
-                    </div>
+            <div class="field">
+                <label for="localidad-input">Tu localidad</label>
+                <div class="input-wrap">
+                    <svg class="input-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/></svg>
+                    <input type="text" id="localidad-input" placeholder="Escribí tu ciudad o localidad..." autocomplete="off">
                 </div>
-                <div class="field">
-                    <label for="lista">Lista de precios</label>
-                    <div class="select-wrap">
-                        <select id="lista" disabled>
-                            <option value="">Seleccionar lista...</option>
-                        </select>
-                        <svg class="select-arrow" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
-                    </div>
-                </div>
+                <div id="localidad-resultados" class="resultados hidden"></div>
             </div>
             <div id="tarifa-info" class="tarifa-info hidden"></div>
         </section>
@@ -86,7 +74,7 @@
             </div>
             <div id="pedido-vacio" class="pedido-vacio">
                 <svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"/></svg>
-                <p>Seleccioná zona y lista, después buscá productos para armar tu pedido.</p>
+                <p>Seleccioná tu localidad, después buscá productos para armar tu pedido.</p>
             </div>
             <div id="pedido-tabla-wrap" class="hidden">
                 <table id="pedido-tabla">
